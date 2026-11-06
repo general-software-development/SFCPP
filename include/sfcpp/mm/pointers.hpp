@@ -33,6 +33,6 @@ namespace mem {
         }
     };
 
-    class sptr;
-    class borrowed_ptr;
+    //class sptr;
+    //class borrowed_ptr;
 }
