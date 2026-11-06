@@ -15,14 +15,14 @@ $ cmake .
 -- The CXX compiler identification is GNU 16.2.0
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: C:/Obscured - skipped
+-- Check for working CXX compiler: C:/Obscured/c++.exe - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 -- Configuring done (0.6s)
 -- Generating done (0.0s)
 -- Build files have been written to: E:/SFCPP
 $ ninja
-[2/2] Linking CXX static library libsfcpp.a
+[3/3] Linking CXX static library libsfcpp.a
 CF        libsfcpp.a
 LD        libsfcpp.a
 ```
