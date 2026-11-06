@@ -1,4 +1,4 @@
-# Simple & Fast C++
+# Safe & Fast C++
 
 **SFCPP** is a library that attempts to bring Rust's safety and speed over to C++.
 
