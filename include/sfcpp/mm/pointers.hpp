@@ -25,7 +25,7 @@ namespace mem {
         ptr operator+(const sfcpp::arch::u64& other) const;
         ptr operator+(ptr& other) const;
         ptr operator-(const sfcpp::arch::u64& other) const;
-        ptr operator-(ptr& other) const;
+        sfcpp::arch::u64 operator-(ptr& other) const;
         void free();
 
         inline void* get_data() {

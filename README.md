@@ -32,11 +32,16 @@ LD        libsfcpp.a
 * Arrays
   * [X] `mem::static_bounded_buffer<u64, T>`
     * [ ] Replace underlying storage from `void*` to `mem::sptr`
+    * [ ] Make members inlined
   * [ ] `mem::bounded_buffer<T>`
 * Pointers
   * [X] `mem::ptr`
-  * [ ] `mem::sptr` <!-- Arithmetic unimplemented -->
-  * [ ] `mem::borrowed_ptr`
+    * [ ] Pointer arithmetic
+    * [ ] Templated class, with inlined functions
+  * [ ] `mem::sptr<T>` <!-- Arithmetic unimplemented -->
+    * [ ] Pointer arithmetic
+    * [ ] Templated class, with inlined functions (!!)
+  * [ ] `mem::borrowed_ptr<T>`
     * [ ] `mem::sptr.borrow()`
   * [ ] `mem::unsafe_borrowed_ptr`  <!-- .as() returns references to objects instead of copying them, compared to borrowed_ptr -->
 * Memory Allocation

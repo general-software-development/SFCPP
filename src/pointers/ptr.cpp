@@ -34,8 +34,8 @@ ptr ptr::operator-(const u64& other) const {
     return ptr((char*)this->data - other);
 }
 
-ptr ptr::operator-(ptr& other) const {
-    return ptr((char*)this->data - (u64)other.get_data());
+u64 ptr::operator-(ptr& other) const {
+    return (char*)this->data - (char*)other.get_data();
 }
 
 void ptr::free() {
