@@ -45,3 +45,9 @@ LD        libsfcpp.a
   * [ ] Memory allocation
   * [ ] Bulk memory allocation
   * [ ] Memory deallocation
+* Thread Safety
+  * [ ] Lock-based `mem::borrowed_ptr` writes
+  * [ ] Lock-based `mem::sptr` `.as()` calls
+  * [ ] Optional `mem::sptr` locking
+    * [ ] `mem::sptr.get_lock()`
+    * [ ] `mem::sptr.release_lock()`
