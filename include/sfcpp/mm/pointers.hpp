@@ -1,13 +1,22 @@
+#include <cstddef>
 #include <sfcpp/arch/iint.hpp>
 
 // These are not reimplementations of STL smart pointers.
 // Do not treat them as such.
 
 namespace mem {
+    namespace internal {
+        struct control {
+            void* original;
+            void (*freer)(void*);
+            sfcpp::arch::u64 references = 1;
+        };
+    }
+
     class ptr {
         private:
-        void* data;
-        void(*freer)(void* data);
+        void* data = NULL;
+        void(*freer)(void* data) = NULL;
 
         public:
         // TODO: Implement all of these
@@ -17,6 +26,8 @@ namespace mem {
         ptr operator+(ptr& other) const;
         ptr operator-(const sfcpp::arch::u64& other) const;
         ptr operator-(ptr& other) const;
+        void free();
+
         inline void* get_data() {
             return this->data;
         }
@@ -33,6 +44,41 @@ namespace mem {
         }
     };
 
-    //class sptr;
+    class sptr {
+        private:
+        void* data;
+        internal::control* owner = nullptr;
+        void release() noexcept;
+
+        public:
+        sptr(void* data);
+        sptr(void* data, void(*freer)(void* data));
+        sptr(const sptr& other) noexcept;
+        sptr(sptr&& other) noexcept;
+        ~sptr();
+
+        sptr& operator=(const sptr& other) noexcept;
+        sptr& operator=(sptr&& other) noexcept;
+
+        // TODO: Implement these
+        sptr operator+(const sfcpp::arch::u64& other) const;
+        sptr operator+(sptr& other) const;
+        sptr operator-(const sfcpp::arch::u64& other) const;
+        sptr operator-(sptr& other) const;
+
+        inline void* get_data() {
+            return this->data;
+        }
+
+        template <typename T>
+        inline T& as() {
+            return *reinterpret_cast<T*>(this->data);
+        }
+        template <typename T>
+        inline const T& as() const {
+            return *reinterpret_cast<T*>(this->data);
+        }
+    };
+
     //class borrowed_ptr;
 }
