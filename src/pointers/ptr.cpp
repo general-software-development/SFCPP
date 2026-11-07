@@ -8,6 +8,8 @@ void standard_ptr_freer(void* data) {
     free(data);
 }
 
+// mem::ptr
+
 namespace mem {
 
 ptr::ptr(void* data) {
@@ -34,6 +36,10 @@ ptr ptr::operator-(const u64& other) const {
 
 ptr ptr::operator-(ptr& other) const {
     return ptr((char*)this->data - (u64)other.get_data());
+}
+
+void ptr::free() {
+    this->freer(this->data);
 }
 
 }

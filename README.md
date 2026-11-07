@@ -7,7 +7,7 @@
 Requirements:
 
 * CMake 3.16
-* A C++17 or newer compiler
+* A C++20 or newer compiler
 
 ```bash
 $ cmake .
@@ -22,7 +22,26 @@ $ cmake .
 -- Generating done (0.0s)
 -- Build files have been written to: E:/SFCPP
 $ ninja
-[3/3] Linking CXX static library libsfcpp.a
+[5/5] Linking CXX static library libsfcpp.a
 CF        libsfcpp.a
 LD        libsfcpp.a
 ```
+
+## Roadmap
+
+* Arrays
+  * [X] `mem::static_bounded_buffer<u64, T>`
+    * [ ] Replace underlying storage from `void*` to `mem::sptr`
+  * [ ] `mem::bounded_buffer<T>`
+* Pointers
+  * [X] `mem::ptr`
+  * [ ] `mem::sptr` <!-- Arithmetic unimplemented -->
+  * [ ] `mem::borrowed_ptr`
+    * [ ] `mem::sptr.borrow()`
+  * [ ] `mem::unsafe_borrowed_ptr`  <!-- .as() returns references to objects instead of copying them, compared to borrowed_ptr -->
+* Memory Allocation
+  * [ ] Arena implementation
+  * [ ] Arena heap implementation
+  * [ ] Memory allocation
+  * [ ] Bulk memory allocation
+  * [ ] Memory deallocation

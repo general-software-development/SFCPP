@@ -5,10 +5,11 @@
 #endif
 
 namespace mem {
+    // THE CALLER IS RESPONSIBLE FOR FREEING MEMOERY
     template <sfcpp::arch::u64 size, typename T>
     class static_bounded_buffer {
         private:
-        T* data;
+        T* data;  // TODO: Replace with sptr
 
         public:
         static_bounded_buffer();
