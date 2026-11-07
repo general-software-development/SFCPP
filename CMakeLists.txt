@@ -2,11 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(sfcpp LANGUAGES CXX)
 
-add_library(sfcpp_mm_pointers OBJECT
-    src/pointers/ptr.cpp
-    src/pointers/sptr.cpp
-)
-
 add_library(sfcpp_mm OBJECT
     src/arrays.cpp
 )
@@ -32,8 +27,6 @@ function(configure_sfcpp_target target)
     target_compile_options(${target} PRIVATE -fpermissive)
 endfunction()
 
-configure_sfcpp_target(sfcpp_mm_pointers)
-
 configure_sfcpp_target(sfcpp_mm)
 
 configure_sfcpp_target(sfcpp_internal)
@@ -42,7 +35,6 @@ add_library(sfcpp STATIC)
 
 target_link_libraries(sfcpp PRIVATE
     sfcpp_mm
-    sfcpp_mm_pointers
     sfcpp_internal
 )
 

@@ -91,22 +91,22 @@ void test_ptr_default_deleter_and_access() {
 
     // int is an implicit-lifetime type under C++20.
     *static_cast<int*>(raw) = 42;
-    mem::ptr p(raw);
+    mem::ptr<int> p(raw);
     CHECK(p.get_data() == raw);
-    CHECK(p.as<int>() == 42);
-    p.as<int>() = 99;
-    const mem::ptr& cp = p;
-    CHECK(cp.as<int>() == 99);
+    CHECK(*p == 42);
+    *p = 99;
+    const mem::ptr<int>& cp = p;
+    CHECK(*cp() == 99);
     p.free(); // Explicit: mem::ptr has no user-declared destructor.
 }
 
 void test_ptr_custom_deleter() {
     int before = int_deletions;
     {
-        mem::ptr p(new int(21), delete_int);
-        CHECK(p.as<int>() == 21);
-        p.as<int>() = 22;
-        CHECK(p.as<int>() == 22);
+        mem::ptr<int> p(new int(21), delete_int);
+        CHECK(*p == 21);
+        *p = 22;
+        CHECK(*p == 22);
         p.free();
         CHECK(int_deletions == before + 1);
     }
@@ -116,23 +116,21 @@ void test_ptr_custom_deleter() {
 void test_sptr_copy_construction() {
     int before = int_deletions;
     {
-        mem::sptr a(new int(42), delete_int);
+        mem::sptr<int> a(new int(42), delete_int);
         void* raw = a.get_data();
-        CHECK(a.as<int>() == 42);
+        CHECK(*a == 42);
         {
             mem::sptr b(a);
             mem::sptr c = b;
             CHECK(a.get_data() == raw);
             CHECK(b.get_data() == raw);
             CHECK(c.get_data() == raw);
-            b.as<int>() = 100;
-            CHECK(a.as<int>() == 100);
-            const mem::sptr& cc = c;
-            CHECK(cc.as<int>() == 100);
+            *b = 100;
+            CHECK(*a == 100);
             CHECK(int_deletions == before);
         }
         CHECK(int_deletions == before);
-        CHECK(a.as<int>() == 100);
+        CHECK(*a == 100);
     }
     CHECK(int_deletions == before + 1);
 }

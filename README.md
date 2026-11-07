@@ -36,11 +36,11 @@ LD        libsfcpp.a
   * [ ] `mem::bounded_buffer<T>`
 * Pointers
   * [X] `mem::ptr`
-    * [ ] Pointer arithmetic
-    * [ ] Templated class, with inlined functions
-  * [ ] `mem::sptr<T>` <!-- Arithmetic unimplemented -->
-    * [ ] Pointer arithmetic
-    * [ ] Templated class, with inlined functions (!!)
+    * [X] Pointer arithmetic
+    * [X] Templated class, with inlined functions
+  * [X] `mem::sptr<T>`
+    * [X] Pointer arithmetic
+    * [X] Templated class, with inlined functions (!!)
   * [ ] `mem::borrowed_ptr<T>`
     * [ ] `mem::sptr.borrow()`
   * [ ] `mem::unsafe_borrowed_ptr`  <!-- .as() returns references to objects instead of copying them, compared to borrowed_ptr -->
