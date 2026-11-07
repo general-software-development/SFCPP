@@ -59,6 +59,12 @@ namespace mem {
         inline const T& operator*() const {
             return *reinterpret_cast<T*>(this->data);
         }
+        inline T& operator[](sfcpp::arch::u64 i) {
+            return *reinterpret_cast<T*>(this->data+i);
+        }
+        inline const T& operator*(sfcpp::arch::u64 i) const {
+            return *reinterpret_cast<T*>(this->data+i);
+        }
     };
 
     template <typename T>
@@ -152,6 +158,12 @@ namespace mem {
 
         inline T& operator*() {
             return *this->data;
+        }
+        inline T& operator[](sfcpp::arch::u64 i) {
+            return *reinterpret_cast<T*>(this->data+i);
+        }
+        inline const T& operator*(sfcpp::arch::u64 i) const {
+            return *reinterpret_cast<T*>(this->data+i);
         }
     };
 

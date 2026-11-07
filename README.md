@@ -31,9 +31,9 @@ LD        libsfcpp.a
 
 * Arrays
   * [X] `mem::static_bounded_buffer<u64, T>`
-    * [ ] Replace underlying storage from `void*` to `mem::sptr`
-    * [ ] Make members inlined
-  * [ ] `mem::bounded_buffer<T>`
+    * [X] Replace underlying storage from `void*` to `mem::sptr`
+    * [X] Make members inlined
+  * [X] `mem::bounded_buffer<T>`
 * Pointers
   * [X] `mem::ptr`
     * [X] Pointer arithmetic
