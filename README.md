@@ -34,6 +34,7 @@ LD        libsfcpp.a
     * [X] Replace underlying storage from `void*` to `mem::sptr`
     * [X] Make members inlined
   * [X] `mem::bounded_buffer<T>`
+  * [ ] `mem::unbounded_buffer<T>`
 * Pointers
   * [X] `mem::ptr`
     * [X] Pointer arithmetic
