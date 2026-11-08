@@ -42,11 +42,11 @@ namespace mem {
         sfcpp::arch::u64 size;
 
         public:
-        inline static_bounded_buffer(sfcpp::arch::u64 size) {
+        inline bounded_buffer(sfcpp::arch::u64 size) {
             this->size = size;
             this->data = mem::sptr<T>(std::calloc(size, sizeof(T)), free);  // TODO: Replace with arena
         };
-        inline static_bounded_buffer(sfcpp::arch::u64 size, mem::sptr<T> data) {
+        inline bounded_buffer(sfcpp::arch::u64 size, mem::sptr<T> data) {
             this->size = size;
             this->data = data;
         };
@@ -64,6 +64,18 @@ namespace mem {
                 _s::critical_err("Memory Error", "Attempted to dereference item %zu of static_bounded_buffer<%zu> (address %p)", i, this->size, this->data.get_data() + i);
             return this->data[i];
         };
+
+        inline bounded_buffer<T>& operator=(const bounded_buffer<T>& other) {
+            this->data = other.data;
+            this->size = other.size;
+        }
+
+        inline bounded_buffer<T>& operator=(bounded_buffer<T>&& other) {
+            this->data = other.data;
+            this->size = other.size;
+            other.data.release();
+            other.size = 0;
+        }
 
         inline T* get_data() {
             return this->data;
