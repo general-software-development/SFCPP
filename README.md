@@ -61,11 +61,4 @@ LD        libsfcpp.a
     * [ ] `mem::sptr.get_lock()`
     * [ ] `mem::sptr.release_lock()`
 
-<svg xmlns="http://www.w3.org/2000/svg" width="690" height="24">
-  <rect width="690" height="24" rx="1" fill="#30363d"/>
-  <rect width="330" height="24" rx="1" fill="#238636"/>
-  <text x="345" y="16" text-anchor="middle"
-        fill="white" font-size="13" font-family="Courier">
-    47.82%
-  </text>
-</svg>
+![Progress](./Assets/progress.svg)
