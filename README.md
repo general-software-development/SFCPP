@@ -29,7 +29,7 @@ LD        libsfcpp.a
 
 ## Roadmap (11/23)
 
-![Completion](https://img.shields.io/badge/Completion-47%25-orange?style=for-the-badge)
+![Progress](./Assets/progress.svg)
 
 * Arrays (4/5)
   * [X] `mem::static_bounded_buffer<u64, T>`
@@ -61,4 +61,4 @@ LD        libsfcpp.a
     * [ ] `mem::sptr.get_lock()`
     * [ ] `mem::sptr.release_lock()`
 
-![Progress](./Assets/progress.svg)
+<p align=center>&copy; Copyright 2026, Licensed under the <b>MIT License.</b></p>
