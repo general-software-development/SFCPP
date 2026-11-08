@@ -6,4 +6,5 @@ namespace sfcpp::arch {
     using u32 = uint32_t;
     using u8 = unsigned char;
     using uchar = u8;  // Preferably use uchar* for strings over char*
+    using flag_t = uchar;
 }

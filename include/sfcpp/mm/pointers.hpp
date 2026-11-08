@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <sfcpp/arch/iint.hpp>
 #include <sfcpp/internal.hpp>
+#include <functional>
+#include <new>
 
 // These are not reimplementations of STL smart pointers.
 // Do not treat them as such.
@@ -10,10 +12,10 @@ namespace mem {
     namespace internal {
         struct control {
             void* original;
-            void (*freer)(void*);
+            std::function<void(void*)> freer;
             sfcpp::arch::u64 references = 1;
         };
-        void standard_ptr_freer(void* data) {
+        inline static void standard_ptr_freer(void* data) {
             free(data);
         }
     }
@@ -22,7 +24,7 @@ namespace mem {
     class ptr {
         private:
         void* data = NULL;
-        void(*freer)(void* data) = NULL;
+        std::function<void(void*)> freer = NULL;
 
         public:
         // TODO: Implement all of these
@@ -30,21 +32,21 @@ namespace mem {
             this->data = data;
             this->freer = internal::standard_ptr_freer;
         };
-        inline ptr(void* data, void(*freer)(void* data)) {
+        inline ptr(void* data, std::function<void(void*)> freer) {
             this->data = data;
             this->freer = freer;
         };
         inline ptr<T> operator+(const sfcpp::arch::u64& other) const {
-            return ptr<T>((char*)this->data + other);
+            return ptr<T>((T*)this->data + other, this->freer);
         };
         inline ptr<T> operator+(ptr<T>& other) const {
-            return ptr<T>((char*)this->data + (sfcpp::arch::u64)other.get_data());
+            return ptr<T>((T*)this->data + (sfcpp::arch::u64)other.get_data(), this->freer);
         };
         inline ptr operator-(const sfcpp::arch::u64& other) const {
-            return ptr((char*)this->data - other);
+            return ptr((T*)this->data - other, this->freer);
         };
-        inline sfcpp::arch::u64 operator-(ptr& other) const {
-            return (char*)this->data - (char*)other.get_data();
+        inline std::ptrdiff_t operator-(ptr<T>& other) const {
+            return (T*)this->data - (T*)other.get_data();
         };
         inline void free() {
             this->freer(this->data);
@@ -60,10 +62,10 @@ namespace mem {
             return *reinterpret_cast<T*>(this->data);
         }
         inline T& operator[](sfcpp::arch::u64 i) {
-            return *reinterpret_cast<T*>(this->data+i);
+            return *reinterpret_cast<T*>((T*)this->data+i);
         }
-        inline const T& operator*(sfcpp::arch::u64 i) const {
-            return *reinterpret_cast<T*>(this->data+i);
+        inline const T& operator[](sfcpp::arch::u64 i) const {
+            return *reinterpret_cast<T*>((T*)this->data+i);
         }
     };
 
@@ -72,11 +74,22 @@ namespace mem {
         private:
         void* data;
         internal::control* owner = nullptr;
-        void release() noexcept;
+        inline void release() noexcept {
+            if (!owner)
+                return;
+            if (--owner->references == 0) {
+                internal::control* c = owner;
+                c->freer(owner->original);
+                c->~control();
+                std::free(c);
+            }
+            owner = nullptr;
+            data = nullptr;
+        };
 
         public:
-        inline sptr(void* data): sptr(data, free) {};
-        inline sptr(void* data, void(*freer)(void* data)) {
+        inline sptr(void* data): sptr(data, std::free) {};
+        inline sptr(void* data, std::function<void(void*)> freer) {
             if (data == NULL) {
                 _s::critical_err("Memory Error", "Attempted to initialise safe pointer (mem::sptr) from a null pointer.");
             }
@@ -86,15 +99,15 @@ namespace mem {
                 if (owner == NULL) {
                     _s::critical_err("Allocation Error", "Failed to allocate %llu bytes", sizeof(internal::control));
                 }
-                owner->original = data;
-                owner->freer = freer;
-                owner->references = 1;
+                new (owner) internal::control{data, freer, 1};
+                this->data = data;
             } catch (...) {
+                std::free(owner);
                 freer(data);
                 throw;
             }
         };
-        inline sptr(const sptr& other) noexcept {
+        inline sptr(const sptr& other) noexcept : data(other.data), owner(other.owner) {
             if (owner)
                 owner->references++;
         };
@@ -137,19 +150,19 @@ namespace mem {
 
         inline sptr<T> operator+(const sfcpp::arch::u64& other) const {
             sptr<T> n = sptr<T>(*this);
-            n.owner = this.owner;
-            n.data = this.data + other;
+            n.data = (T*)this->data + other;
+            return n;
         };
-        inline sptr operator+(sptr& other) const {
+        inline sptr<T> operator+(sptr& other) const {
             return *this + (sfcpp::arch::u64)other.get_data();
         };
-        inline sptr operator-(const sfcpp::arch::u64& other) const {
+        inline sptr<T> operator-(const sfcpp::arch::u64& other) const {
             sptr<T> n = sptr<T>(*this);
-            n.owner = this.owner;
-            n.data = this.data - other;
+            n.data = (T*)this->data - other;
+            return n;
         };
-        inline sfcpp::arch::u64 operator-(sptr& other) const {
-            return this->data - other.get_data();
+        inline std::ptrdiff_t operator-(sptr<T>& other) const {
+            return (T*)this->data - (T*)other.get_data();
         };
 
         inline void* get_data() {
@@ -157,13 +170,13 @@ namespace mem {
         }
 
         inline T& operator*() {
-            return *this->data;
+            return *(T*)this->data;
         }
         inline T& operator[](sfcpp::arch::u64 i) {
-            return *reinterpret_cast<T*>(this->data+i);
+            return *reinterpret_cast<T*>((T*)this->data+i);
         }
-        inline const T& operator*(sfcpp::arch::u64 i) const {
-            return *reinterpret_cast<T*>(this->data+i);
+        inline const T& operator[](sfcpp::arch::u64 i) const {
+            return *reinterpret_cast<T*>((T*)this->data+i);
         }
     };
 

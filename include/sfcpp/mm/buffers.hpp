@@ -42,6 +42,9 @@ namespace mem {
         sfcpp::arch::u64 size;
 
         public:
+        static inline bounded_buffer<T> uninitialised() {
+            return bounded_buffer<T>(0, mem::sptr<T>(0x1, [](void* data){}));
+        }
         inline bounded_buffer(sfcpp::arch::u64 size) {
             this->size = size;
             this->data = mem::sptr<T>(std::calloc(size, sizeof(T)), free);  // TODO: Replace with arena
@@ -77,8 +80,12 @@ namespace mem {
             other.size = 0;
         }
 
-        inline T* get_data() {
+        inline mem::sptr<T> get_data() {
             return this->data;
         };
+
+        inline sfcpp::arch::u64 get_size() const {
+            return this->size;
+        }
     };
 };

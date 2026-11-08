@@ -27,15 +27,17 @@ CF        libsfcpp.a
 LD        libsfcpp.a
 ```
 
-## Roadmap
+## Roadmap (11/23)
 
-* Arrays
+![Completion](https://img.shields.io/badge/Completion-47%25-orange?style=for-the-badge)
+
+* Arrays (4/5)
   * [X] `mem::static_bounded_buffer<u64, T>`
     * [X] Replace underlying storage from `void*` to `mem::sptr`
     * [X] Make members inlined
   * [X] `mem::bounded_buffer<T>`
   * [ ] `mem::unbounded_buffer<T>`
-* Pointers
+* Pointers (6/9)
   * [X] `mem::ptr`
     * [X] Pointer arithmetic
     * [X] Templated class, with inlined functions
@@ -45,15 +47,25 @@ LD        libsfcpp.a
   * [ ] `mem::borrowed_ptr<T>`
     * [ ] `mem::sptr.borrow()`
   * [ ] `mem::unsafe_borrowed_ptr`  <!-- .as() returns references to objects instead of copying them, compared to borrowed_ptr -->
-* Memory Allocation
-  * [ ] Arena implementation
+* Memory Allocation (1/5)
+  * [X] Arena implementation
   * [ ] Arena heap implementation
   * [ ] Memory allocation
   * [ ] Bulk memory allocation
   * [ ] Memory deallocation
-* Thread Safety
+* Thread Safety (0/4)
   * [ ] ~~Lock-based `mem::borrowed_ptr` writes~~
   * [ ] ~~Lock-based `mem::sptr` `.as()` calls~~
+  * [ ] Use locks in `mem::sptr` control structs, when updating reference counting
   * [ ] Optional `mem::sptr` locking
     * [ ] `mem::sptr.get_lock()`
     * [ ] `mem::sptr.release_lock()`
+
+<svg xmlns="http://www.w3.org/2000/svg" width="690" height="24">
+  <rect width="690" height="24" rx="1" fill="#30363d"/>
+  <rect width="330" height="24" rx="1" fill="#238636"/>
+  <text x="345" y="16" text-anchor="middle"
+        fill="white" font-size="13" font-family="Courier">
+    47.82%
+  </text>
+</svg>
