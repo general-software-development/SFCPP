@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 
 project(sfcpp LANGUAGES CXX)
 
-#add_library(sfcpp_mm OBJECT
-#    src/arrays.cpp
-#)
+add_library(sfcpp_mm OBJECT
+    src/arenas.cpp
+)
 
 add_library(sfcpp_internal OBJECT
     src/internal.cpp
@@ -27,14 +27,14 @@ function(configure_sfcpp_target target)
     target_compile_options(${target} PRIVATE -fpermissive)
 endfunction()
 
-#configure_sfcpp_target(sfcpp_mm)
+configure_sfcpp_target(sfcpp_mm)
 
 configure_sfcpp_target(sfcpp_internal)
 
 add_library(sfcpp STATIC)
 
 target_link_libraries(sfcpp PRIVATE
-    #sfcpp_mm
+    sfcpp_mm
     sfcpp_internal
 )
 

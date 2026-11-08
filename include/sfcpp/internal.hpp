@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sfcpp/arch/iint.hpp>
 
 namespace _s {

@@ -1,3 +1,5 @@
+#pragma once
+
 using TypeId = const void*;
 
 namespace nortti {

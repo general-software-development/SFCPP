@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstddef>
 #include <cstdlib>
 #include <sfcpp/arch/iint.hpp>
@@ -88,6 +90,7 @@ namespace mem {
         };
 
         public:
+        inline sptr() noexcept : data(NULL), owner(NULL) {}
         inline sptr(void* data): sptr(data, std::free) {};
         inline sptr(void* data, std::function<void(void*)> freer) {
             if (data == NULL) {

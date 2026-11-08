@@ -22,7 +22,7 @@ $ cmake .
 -- Generating done (0.0s)
 -- Build files have been written to: E:/SFCPP
 $ ninja
-[5/5] Linking CXX static library libsfcpp.a
+[3/3] Linking CXX static library libsfcpp.a
 CF        libsfcpp.a
 LD        libsfcpp.a
 ```
@@ -61,4 +61,5 @@ LD        libsfcpp.a
     * [ ] `mem::sptr.get_lock()`
     * [ ] `mem::sptr.release_lock()`
 
+<br>
 <p align=center>&copy; Copyright 2026, Licensed under the <b>MIT License.</b></p>

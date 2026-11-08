@@ -1,3 +1,5 @@
+#pragma once
+
 // TODO: Finish
 
 #include "pointers.hpp"
@@ -6,23 +8,15 @@
 #include <sfcpp/nortti.hpp>
 
 namespace mm {
-    namespace internal {
-        struct ArenaNode {
-            Arena* prev;
-            Arena* next;
-            Arena value;
-        };
+    class Arena;
 
+    namespace internal {
         struct ArenaPoolSlotMeta {
             sfcpp::arch::flag_t used = 0;    // Ignore 'used' for merge blocks
             sfcpp::arch::flag_t merged = 0;  // If this is 1, treat this as an extension of the next block!
         };
 
         class BaseArenaPool {
-            private:
-            sfcpp::arch::u64 capacity = 0;
-            sfcpp::arch::u64 used = 0;
-
             public:
             virtual sfcpp::arch::u64 used() const noexcept;
             virtual sfcpp::arch::u64 available() const noexcept;
@@ -59,4 +53,12 @@ namespace mm {
             // ...
         }
     };
+
+    namespace internal {
+        struct ArenaNode {
+            Arena* prev;
+            Arena* next;
+            Arena value;
+        };
+    }
 };

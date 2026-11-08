@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sfcpp/internal.hpp>
 #include <sfcpp/arch/iint.hpp>
 #include <sfcpp/mm/pointers.hpp>
@@ -17,7 +19,6 @@ namespace mem {
         };
 
         inline const T& operator[](sfcpp::arch::u64 i) const {
-            static_assert(size > i);
             if (i >= size)
                 _s::critical_err("Memory Error", "Attempted to dereference item %zu of static_bounded_buffer<%zu> (address %p)", i, size, this->data.get_data() + i);
             return this->data[i];
@@ -43,7 +44,7 @@ namespace mem {
 
         public:
         static inline bounded_buffer<T> uninitialised() {
-            return bounded_buffer<T>(0, mem::sptr<T>(0x1, [](void* data){}));
+            return bounded_buffer<T>(0, mem::sptr<T>());
         }
         inline bounded_buffer(sfcpp::arch::u64 size) {
             this->size = size;
@@ -55,29 +56,33 @@ namespace mem {
         };
 
         inline const T& operator[](sfcpp::arch::u64 i) const {
-            static_assert(this->size > i);
             if (i >= this->size)
                 _s::critical_err("Memory Error", "Attempted to dereference item %zu of static_bounded_buffer<%zu> (address %p)", i, this->size, this->data.get_data() + i);
             return this->data[i];
         };
 
         inline T& operator[](sfcpp::arch::u64 i) {
-            static_assert(this->size > i);
             if (i >= this->size)
-                _s::critical_err("Memory Error", "Attempted to dereference item %zu of static_bounded_buffer<%zu> (address %p)", i, this->size, this->data.get_data() + i);
+                _s::critical_err("Memory Error", "Attempted to dereference item %zu of static_bounded_buffer<%zu> (address %p)", i, this->size, (T*)this->data.get_data() + i);
             return this->data[i];
         };
 
         inline bounded_buffer<T>& operator=(const bounded_buffer<T>& other) {
             this->data = other.data;
             this->size = other.size;
+
+            return *this;
         }
 
         inline bounded_buffer<T>& operator=(bounded_buffer<T>&& other) {
-            this->data = other.data;
+            if (this == &other)
+                return *this;
+
+            this->data = std::move(other.data);
             this->size = other.size;
-            other.data.release();
             other.size = 0;
+
+            return *this;
         }
 
         inline mem::sptr<T> get_data() {

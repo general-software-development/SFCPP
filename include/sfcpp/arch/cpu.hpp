@@ -1,4 +1,6 @@
-#include "iint.hpp";
+#pragma once
+
+#include "iint.hpp"
 
 // Source - https://stackoverflow.com/a/66249936
 // Posted by FreakAnon, modified by community. See post 'Timeline' for change history

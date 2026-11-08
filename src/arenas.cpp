@@ -22,7 +22,7 @@ namespace mm {
         return count <= this->available();
     }
 
-    mem::sptr<char> ArenaPool::allocate(u64 count) {
+    mem::sptr<char> ArenaPool::allocate(u64 count) noexcept {
         metastruct[index].used = 1;
         metastruct[index].merged = 0;
         for (u64 i = 1; i < count; i++) {
