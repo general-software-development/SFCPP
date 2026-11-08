@@ -27,14 +27,15 @@ CF        libsfcpp.a
 LD        libsfcpp.a
 ```
 
-## Roadmap (11/23)
+## Roadmap (11/24)
 
 ![Progress](./Assets/progress.svg)
 
-* Arrays (4/5)
+* Arrays (4/6)
   * [X] `mem::static_bounded_buffer<u64, T>`
     * [X] Replace underlying storage from `void*` to `mem::sptr`
     * [X] Make members inlined
+    * [ ] Moves, copies, get_size()
   * [X] `mem::bounded_buffer<T>`
   * [ ] `mem::unbounded_buffer<T>`
 * Pointers (6/9)
