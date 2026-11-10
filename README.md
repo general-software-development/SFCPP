@@ -27,7 +27,7 @@ CF        libsfcpp.a
 LD        libsfcpp.a
 ```
 
-## Roadmap (11/24)
+## Roadmap (13/24)
 
 ![Progress](./Assets/progress.svg)
 
@@ -38,17 +38,17 @@ LD        libsfcpp.a
     * [ ] Moves, copies, get_size()
   * [X] `mem::bounded_buffer<T>`
   * [ ] `mem::unbounded_buffer<T>`
-* Pointers (6/9)
+* Pointers (8/9)
   * [X] `mem::ptr`
     * [X] Pointer arithmetic
     * [X] Templated class, with inlined functions
   * [X] `mem::sptr<T>`
     * [X] Pointer arithmetic
     * [X] Templated class, with inlined functions (!!)
-  * [ ] `mem::borrowed_ptr<T>`
-    * [ ] `mem::sptr.borrow()`
-  * [ ] `mem::unsafe_borrowed_ptr`  <!-- .as() returns references to objects instead of copying them, compared to borrowed_ptr -->
-* Memory Allocation (1/5)
+  * [X] `mem::borrowed_ptr<T>`
+    * [X] `mem::sptr.borrow()`
+  * [ ] `mem::unsafe_borrowed_ptr`  <!-- operator* returns references to objects instead of copying them, compared to borrowed_ptr -->
+* Memory Allocation (1/5) (Postponed)
   * [X] Arena implementation
   * [ ] Arena heap implementation
   * [ ] Memory allocation

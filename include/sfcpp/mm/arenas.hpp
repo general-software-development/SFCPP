@@ -46,12 +46,12 @@ namespace mm {
         ArenaPool pool1;
 
         public:
-        Arena() = default;
+        Arena();
 
-        template <typename T>
-        inline mem::sptr<T> alloc() {
-            // ...
-        }
+        sfcpp::arch::u64 used() const noexcept;
+        sfcpp::arch::u64 available() const noexcept;
+        bool can_allocate(sfcpp::arch::u64 count) const noexcept;
+        mem::sptr<char> allocate(sfcpp::arch::u64 count) noexcept;
     };
 
     namespace internal {

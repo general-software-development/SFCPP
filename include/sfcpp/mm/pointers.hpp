@@ -181,7 +181,133 @@ namespace mem {
         inline const T& operator[](sfcpp::arch::u64 i) const {
             return *reinterpret_cast<T*>((T*)this->data+i);
         }
+
+        inline borrowed_ptr borrow() {
+            return borrowed_ptr(*this);
+        }
     };
 
-    //class borrowed_ptr;
+    template <typename T>
+    class borrowed_ptr {
+        private:
+        void* data;
+        internal::control* owner = nullptr;
+        inline void release() noexcept {
+            if (!owner)
+                return;
+            if (--owner->references == 0) {
+                internal::control* c = owner;
+                c->freer(owner->original);
+                c->~control();
+                std::free(c);
+            }
+            owner = nullptr;
+            data = nullptr;
+        };
+
+        public:
+        inline borrowed_ptr() noexcept : data(NULL), owner(NULL) {}
+        inline borrowed_ptr(void* data): borrowed_ptr(data, std::free) {};
+        inline borrowed_ptr(void* data, std::function<void(void*)> freer) {
+            if (data == NULL) {
+                _s::critical_err("Memory Error", "Attempted to initialise safe pointer (mem::sptr) from a null pointer.");
+            }
+        
+            try {
+                owner = (internal::control*)malloc(sizeof(internal::control));
+                if (owner == NULL) {
+                    _s::critical_err("Allocation Error", "Failed to allocate %llu bytes", sizeof(internal::control));
+                }
+                new (owner) internal::control{data, freer, 1};
+                this->data = data;
+            } catch (...) {
+                std::free(owner);
+                freer(data);
+                throw;
+            }
+        };
+        inline borrowed_ptr(const borrowed_ptr& other) noexcept : data(other.data), owner(other.owner) {
+            if (owner)
+                owner->references++;
+        };
+        inline borrowed_ptr(borrowed_ptr&& other) noexcept : data(other.data), owner(other.owner) {
+            other.data = NULL;
+            other.owner = NULL;
+        };
+        inline borrowed_ptr(const sptr& other) noexcept : data(other.data), owner(other.owner) {
+            if (owner)
+                owner->references++;
+        }
+        inline borrowed_ptr(sptr&& other) noexcept : data(other.data), owner(other.owner) {
+            other.data = NULL;
+            other.owner = NULL;
+        };
+        inline ~borrowed_ptr() {
+            release();
+        };
+
+        inline borrowed_ptr& operator=(const borrowed_ptr& other) noexcept {
+            if (this == &other)
+                return *this;
+
+            release();
+
+            data = other.data;
+            owner = other.owner;
+
+            if (owner)
+                ++owner->references;
+
+            return *this;
+        };
+        inline borrowed_ptr& operator=(borrowed_ptr&& other) noexcept {
+            if (this == &other)
+                return *this;
+
+            release();
+
+            data = other.data;
+            owner = other.owner;
+
+            other.data = NULL;
+            other.owner = NULL;
+
+            return *this;
+        };
+
+        inline borrowed_ptr<T> operator+(const sfcpp::arch::u64& other) const {
+            sptr<T> n = sptr<T>(*this);
+            n.data = (T*)this->data + other;
+            return n;
+        };
+        inline borrowed_ptr<T> operator+(borrowed_ptr& other) const {
+            return *this + (sfcpp::arch::u64)other.get_data();
+        };
+        inline borrowed_ptr<T> operator-(const sfcpp::arch::u64& other) const {
+            sptr<T> n = sptr<T>(*this);
+            n.data = (T*)this->data - other;
+            return n;
+        };
+        inline std::ptrdiff_t operator-(borrowed_ptr<T>& other) const {
+            return (T*)this->data - (T*)other.get_data();
+        };
+
+        inline T operator*() {
+            return *(T*)this->data;
+        }
+        inline T operator[](sfcpp::arch::u64 i) {
+            return *reinterpret_cast<T*>((T*)this->data+i);
+        }
+        inline const T operator[](sfcpp::arch::u64 i) const {
+            return *reinterpret_cast<T*>((T*)this->data+i);
+        }
+
+        inline void set(T value) {
+            *(T*)this->data = value;
+        }
+
+        inline void set(T value, sfcpp::arch::u64 index) {
+            ((T*)this->data)[index] = value;
+        }
+    };
 }

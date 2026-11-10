@@ -55,9 +55,11 @@ namespace mm {
             i++;
         }
 
-        for (u64 i = index - 1; i >= 0; i--) {
+        for (u64 i = index - 1; i > 0; i--) {
             if (metastruct[i].used == 0 && metastruct[i].merged == 0)
                 index--;
+            else
+                break;
         }
     }
 }
